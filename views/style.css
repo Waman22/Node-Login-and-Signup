@@ -1,0 +1,20 @@
+/* public/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    display:list-item;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    color: #555;
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="/public/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 30%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            const name = document.forms["myForm"]["name"].value;
+            const email = document.forms["myForm"]["email"].value;
+            const username = document.forms["myForm"]["username"].value;
+            const password = document.forms["myForm"]["password"].value;
+
+            if (!name || !email || !username || !password) {
+                alert("All fields are required!");
+                return false;
+            }
+
+            if (!validateEmail(email)) {
+                alert("Invalid email address!");
+                return false;
+            }
+
+            if (!validatePassword(password)) {
+                alert("Password must be at least 8 characters long and include a mix of letters, numbers, and special characters.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validatePassword(password) {
+            const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+            return re.test(String(password));
+        }
+
+        function updatePasswordStrength() {
+            const password = document.forms["myForm"]["password"].value;
+            const strength = checkPasswordStrength(password);
+            const strengthText = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'][strength];
+            const strengthColor = ['red', 'orange', 'yellow', 'lightgreen', 'green'][strength];
+            document.getElementById('password-strength').innerText = `Password Strength: ${strengthText}`;
+            document.getElementById('password-strength').style.color = strengthColor;
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            return strength;
+        }
+
+        function navigate(section) {
+            document.querySelectorAll('section').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            document.getElementById(section).style.display = 'block';
+        }
+
+        // Show home section by default
+        navigate('home');
+    </script>
+</head>
+<body>
+    
+        <h1>Fill in the Form </h1>
+
+        <% if (messages.error) { %>
+            <p class="error"><%= messages.error %></p>
+        <% } %>
+
+        <form name="myForm" action="/register" method="post" onsubmit="return validateForm()">
+            <label>Name:</label>
+            <input type="text" name="name"><br>
+
+            <label>Surname:</label>
+            <input type="text" name="surname"><br>
+
+            <label>Email:</label>
+            <input type="email" name="email"><br>
+
+            <label>Username:</label>
+            <input type="text" name="username"><br>
+
+            <label>Password:</label>
+            <input type="password" name="password" oninput="updatePasswordStrength()"><br>
+            <div id="password-strength" style="margin-bottom: 10px;"></div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</body>
+</html>

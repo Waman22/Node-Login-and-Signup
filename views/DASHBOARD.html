@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/styles/user.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<body class="bg-custom-dark text-gray-100">
+    <div class="sidenav">
+        <div class="logo">Track</div>
+        <div class="searchbar">
+            <input class="search" placeholder="Search...">
+            <button class="sbtn"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+        <div class="spacer"></div>
+        <button class="mbtn"><i class="fa fa-list icon" aria-hidden="true"><a href="/location"></i> Workshop</a></button>
+        <button class="mbtn"><i class="fa fa-shopping-cart icon" aria-hidden="true"><a href="/userTake_tools"></i> Take Tools</a></button>
+        <button class="mbtn"><i class="fa fa-user icon" aria-hidden="true"><a href="/return_tools"></i> Return Tools</a></button>
+        <button class="mbtn"><i class="fa fa-bolt icon" aria-hidden="true"><a href="/"></i> Logout</a></button>
+    </div>
+    <div class="content-area">
+        <h1>Dashboard - <span id="location"></span></h1>
+        <p><strong>Date:</strong> <span id="current-date"></span></p>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Tool Name</th>
+                    <th>Total Available</th>
+                </tr>
+            </thead>
+            <tbody id="tools-table-body">
+                <!-- JavaScript will populate this -->
+            </tbody>
+        </table>
+
+        <script>
+            // Set the current date
+            document.getElementById("current-date").textContent = new Date().toLocaleDateString();
+
+            // Fetch tool data from the backend
+            async function fetchTools() {
+                try {
+                    const response = await fetch('/dashboard/data'); // Fetch tools from backend
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch tool data');
+                    }
+                    const data = await response.json();
+
+                    // Display the location
+                    document.getElementById("location").textContent = data.location;
+
+                    const tableBody = document.getElementById("tools-table-body");
+                    tableBody.innerHTML = ""; // Clear previous data
+
+                    // Populate the table with tool counts
+                    data.tools.forEach(tool => {
+                        const row = `
+                            <tr>
+                                <td>${tool.Tool_name}</td>
+                                <td>${tool.tool_count}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                } catch (error) {
+                    console.error("Error fetching tools:", error);
+                    const tableBody = document.getElementById("tools-table-body");
+                    tableBody.innerHTML = `<tr><td colspan="2">Error: ${error.message}</td></tr>`;
+                }
+            }
+
+            fetchTools();
+        </script>
+    </div>
+
+    
+</body>
+</html>

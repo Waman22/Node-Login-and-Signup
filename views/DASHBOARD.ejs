@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/public/style.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .main-container {
+            display: flex;
+        }
+        .sidebar {
+            background: #000000;
+            min-width: 250px;
+            max-width: 250px;
+            transition: all 0.3s;
+        }
+        .content {
+            flex-grow: 1;
+            min-height: 100vh;
+            width: 100%;
+        }
+        .header-box {
+            padding: 10px 20px;
+            background: #333;
+        }
+        .header-box h1 {
+            font-size: 1.5rem;
+            color: white;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        .sidebar ul li.active {
+            background: #eee;
+            border-radius: 8px;
+        }
+        .sidebar ul li.active a {
+            color: #000;
+        }
+        .sidebar ul li a:hover {
+            background: #333;
+        }
+        hr.h-color {
+            background: #eee;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .logout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: darkred;
+        }
+        .no-users {
+            color: #666;
+            font-style: italic;
+        }
+        @media (max-width: 767px) {
+            .sidebar {
+                margin-left: -250px;
+                position: absolute;
+                min-height: 100vh;
+                z-index: 1;
+            }
+            .sidebar.active {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Side Navigation Bar -->
+        <div class="sidebar" id="side_nav">
+            <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
+                <h1 class="fs-4"><span class="bg-white text-dark rounded shadow px-2 me-2"></span> <span
+                        class="text-white">INC SYSTEM</span></h1>
+            </div>
+
+            <ul class="list-unstyled px-2">
+                <li class="active"><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
+                            class="bi bi-house"></i> Dashboard</a></li>
+                <li><a href="/" class="text-decoration-none px-3 py-2 d-block"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
+            <hr class="h-color mx-2">
+
+            <ul class="list-unstyled px-2">
+                <li><a href="/about" class="text-decoration-none px-3 py-2 d-block"><i class="bi bi-info-circle"></i> About</a></li>
+                <li><a href="/services" class="text-decoration-none px-3 py-2 d-block"><i class="bi bi-gear"></i> Services</a></li>
+                <li><a href="/contact" class="text-decoration-none px-3 py-2 d-block"><i class="bi bi-telephone"></i> Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container-fluid">
+                    
+                </div>
+            </nav>
+
+            <div class="container">
+                <!--If you want to capitalize only
+                 the first letter of each word in the user's name, you can create a helper function in your EJS template-->
+                <% 
+                function capitalizeFirstLetter(string) {
+                    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+                }
+                
+                function capitalizeWords(string) {
+                    return string.split(' ').map(capitalizeFirstLetter).join(' ');
+                }
+                %>
+                
+                <h1>Welcome, <%= capitalizeWords(user.name) %>!</h1>
+    <p>Surname: <%= user.surname %></p>
+    <p>Username: <%= user.username %></p>
+    <p>Email: <%= user.email %></p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("side_nav");
+            const openBtn = document.querySelector(".open-btn");
+            const closeBtn = document.querySelector(".close-btn");
+
+            openBtn.addEventListener("click", function () {
+                sidebar.classList.add("active");
+            });
+
+            closeBtn.addEventListener("click", function () {
+                sidebar.classList.remove("active");
+            });
+
+            const sidebarLinks = document.querySelectorAll(".sidebar ul li");
+            sidebarLinks.forEach(link => {
+                link.addEventListener("click", function () {
+                    document.querySelector(".sidebar ul li.active").classList.remove("active");
+                    this.classList.add("active");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
